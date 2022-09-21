@@ -1,34 +1,37 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 const path = "https://pokeapi.co/api/v2/";
 const query = "pokemon?limit=20&offset=0";
 
 export default function App() {
   const [pokemons, setPokemons] = useState([]);
-  const fetchPokemons = async () => {
-    let response = await fetch(`${path}${query}`);
-    response = await response.json();
-    console.log("Response", response.results);
-    await Promise.all(
-      response.results.map(async (e) => {
-        let resp = await fetch(e.url);
-        resp = await resp.json();
-        console.log(e.name);
-        resp.types.map((e) => {
-          console.log(e.type.name);
-        });
-        console.log(resp.sprites.front_default);
-      })
-    );
-  };
+
   useEffect(() => {
+    const fetchPokemons = async () => {
+      let response = await fetch(`${path}${query}`);
+      response = await response.json();
+      await Promise.all(
+        response.results.map(async (e) => {
+          let resp = await fetch(e.url);
+          resp = await resp.json();
+          const name = e.name;
+          const types = [];
+          resp.types.map((e) => {
+            types.push(e.type.name);
+          });
+          const image_url = resp.sprites.front_default;
+          const pokemon = { name: name, types: types, image_url: image_url };
+          console.log(pokemon);
+          setPokemons((pokemons) => [...pokemons, pokemon]);
+        })
+      );
+    };
     fetchPokemons();
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
       <StatusBar style="auto" />
     </View>
   );
