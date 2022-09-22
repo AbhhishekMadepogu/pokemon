@@ -1,13 +1,16 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import {
-  FlatList,
   StyleSheet,
   Text,
   View,
   ImageBackground,
   SafeAreaView,
+  FlatList,
+  VirtualizedList,
+  ScrollView,
 } from "react-native";
+// import { FlatList } from "react-native-virtualized-view";
 const path = "https://pokeapi.co/api/v2/";
 const query = "pokemon?limit=20&offset=0";
 export default function App() {
@@ -56,15 +59,15 @@ export default function App() {
                 ></ImageBackground>
               </View>
             </View>
-            <View style={styles.typeCard}>
+            <ScrollView horizontal={true} style={styles.typeCard}>
               {item.types.map((e) => {
                 return (
-                  <View style={{ backgroundColor: "#FFF" }}>
+                  <View style={{ backgroundColor: "#FFF", height: 20 }}>
                     <Text style={styles.types}>{e + " "}</Text>
                   </View>
                 );
               })}
-            </View>
+            </ScrollView>
           </View>
         )}
       ></FlatList>
